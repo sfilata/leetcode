@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Skill</title>
+  <style>
+    .pie-container {
+      position: relative;
+    }
+    .circle, .circle::after {
+      display: inline-block;
+      height: 200px;
+      width: 200px;
+      border-radius: 50%;
+      box-sizing: border-box;
+    }
+    .circle {
+      border: solid 100px;
+      border-color: #3c7 #3c7 #37c #37c;
+      transform: rotate(45deg);
+    }
+    .circle::after {
+      content: '';
+      border: solid 100px;
+      border-color: #37c #37c transparent transparent;
+      transform: translate(-50%, -50%) rotate(.0turn);
+      /* animation: spine 10s linear infinite; */
+      animation: spine 10s linear infinite,
+                 convex 10s step-end infinite;
+      animation-play-state: paused;
+      animation-delay: inherit;
+    }
+
+    @keyframes spine {
+      to { transform: translate(-50%, -50%) rotate(1turn); }
+    }
+
+    @keyframes convex {
+      50% { border-color: transparent transparent #3c7 #3c7; }
+    }
+
+    .circle span {
+      font-size: 1rem;
+      position: absolute;
+      color: #fff;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      z-index: 2;
+    }
+
+    .pie, .pie::after {
+      display: inline-block;
+      height: 200px;
+      width: 200px;
+      border-radius: 50%;
+      box-sizing: border-box;
+    }
+
+    .pie {
+      background: linear-gradient(0.35turn, transparent 50%, #37c 50%);
+      color: #fff;
+      font-size: 1rem;
+      line-height: 200px;
+      text-align: center;
+    }
+    .pie::after {
+      content: '';
+      background: linear-gradient(90deg, #37c 50%,#3c7 50%); 
+      z-index: -1;
+      /* animation: spine 10s linear infinite; */
+      position: absolute;
+      left: 0;
+    }
+    .pie.convex {
+      background: linear-gradient(.85turn, #3c7 50%, transparent 50%);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="circle-container">
+      <div class="circle" style="animation-delay: -1s"><span>10%</span></div>
+      <div class="circle" style="animation-delay: -2.5s"><span>25%</span></div>
+      <div class="circle" style="animation-delay: -5s"><span>50%</span></div>
+      <div class="circle" style="animation-delay: -8s"><span>80%</span></div>
+      <div class="circle" style="animation-delay: -9s"><span>90%</span></div>
+    </div>
+    <div class="pie-container">
+      <div class="pie">10%</div>
+    </div>
+  </div>
+</body>
+</html>
