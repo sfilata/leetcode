@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slider Example</title>
+  <style>
+    html, body {
+      display: flex;
+      justify-content: center;
+    }
+    .slider-container {
+      width: 790px;
+      height: 340px;
+      position: relative;
+      margin-top: 20px;
+    }
+
+    .slider-container ul {
+      list-style-type: none;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+
+    .slider__item, .slider__item--selected {
+      position: absolute;
+      transition: opacity 1s;
+      opacity: 0;
+      text-align: center;
+    }
+
+    .slider__item--selected {
+      transition: opacity 1s;
+      opacity: 1;
+    }
+
+    .slider__next,
+    .slider__previous{
+      display: inline-block;
+      position: absolute;
+      top: 50%; /*定位在录播图组件的纵向中间的位置*/
+      margin-top: -25px;
+      width: 30px;
+      height:50px;
+      text-align: center;
+      font-size: 24px;
+      line-height: 50px;
+      overflow: hidden;
+      border: none;
+      color: white;
+      background: rgba(0,0,0,0.2); /*设置为半透明*/
+      cursor: pointer; /*设置鼠标移动到这个元素时显示为手指状*/
+      opacity: 0; /*初始状态为透明*/
+      transition: opacity .5s; /*设置透明度变化的动画，时间为.5秒*/
+    }
+
+    .slider__previous {
+      left: 0; /*定位在slider元素的最左边*/
+    }
+
+    .slider__next {
+      right: 0; /*定位在slider元素的最右边*/
+    }
+
+    .slider-container:hover .slider__previous {
+      opacity: 1;
+    }
+
+    .slider-container:hover .slider__next {
+      opacity: 1;
+    }
+
+    .slider__previous:after {
+      content: '<';
+    }
+
+    .slider__next:after {
+      content: '>';
+    }
+
+    .slider__controller{
+      position: relative;
+      display: table; /* table 布局*/
+      background-color: rgba(255, 255, 255, 0.5);
+      padding: 5px;
+      border-radius: 12px;
+      bottom: 30px;
+      margin: auto;
+    }
+
+    .slider__controller-button,
+    .slider__controller-button--selected{
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;/*设置为圆形*/
+      margin: 0 5px;
+      background-color: white;
+      cursor: pointer;
+    }
+
+    .slider__controller-button--selected {
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="slider-container">
+    <ul>
+      <li class="slider__item--selected"><img src="https://p5.ssl.qhimg.com/t0119c74624763dd070.png"/></li>
+      <li class="slider__item"><img src="https://p4.ssl.qhimg.com/t01adbe3351db853eb3.jpg"/></li>
+      <li class="slider__item"><img src="https://p2.ssl.qhimg.com/t01645cd5ba0c3b60cb.jpg"/></li>
+      <li class="slider__item"><img src="https://p4.ssl.qhimg.com/t01331ac159b58f5478.jpg"/></li>
+    </ul>
+    <a class="slider__next"></a>
+    <a class="slider__previous"></a>
+    <div class="slider__controller">
+      <span class="slider__controller-button--selected"></span>
+      <span class="slider__controller-button"></span>
+      <span class="slider__controller-button"></span>
+      <span class="slider__controller-button"></span>
+    </div>
+  </div>
+  <script>
+    class Slider {
+      constructor({container, duration = 3000} = {}) {
+        this.container = container;
+        this.items = [...document.querySelectorAll('.slider__item, .slider__item--selected')];
+        this.timer = null;
+        this.duration = duration;
+      }
+
+      registerPlugins(...plugins) {
+        plugins.forEach(plugin => plugin(this));
+      }
+
+      getSelectedItem() {
+        const selected = this.container.querySelector('.slider__item--selected');
+        return selected;
+      }
+
+      getSelectedItemIndex() {
+        return this.items.indexOf(this.getSelectedItem());
+      }
+
+      slideTo(index) {
+        this.endSlide();
+        const selected = this.getSelectedItem();
+        if (selected) {
+          selected.className = 'slider__item';
+        }
+        const tobeSelected = this.items[index];
+        if (tobeSelected) {
+          tobeSelected.className = 'slider__item--selected';
+        }
+        const detail = { index };
+        const event = new CustomEvent('slide', { bubbles: true, detail });
+        this.container.dispatchEvent(event);
+        this.startSlide();
+      }
+
+      slideNext() {
+        const current = this.getSelectedItemIndex();
+        const next = (current + 1) % this.items.length;
+        this.slideTo(next);
+      }
+
+      slidePrevious() {
+        const current = this.getSelectedItemIndex();
+        const next = (current + 5) % this.items.length;
+        console.log(next)
+        this.slideTo(next);
+      }
+
+      startSlide(duration) {
+        if (duration) this.duration = duration;
+        if (!this.timer) {
+          this.timer = setInterval(() => {
+            this.slideNext();
+          }, duration || this.duration);
+        }
+      }
+
+      endSlide() {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+    }
+
+    function prevNextPlugin(slider) {
+      const prev = document.querySelector('.slider__previous');
+      const next = document.querySelector('.slider__next');
+      slider.prev = prev;
+      slider.next = next;
+      slider.container.addEventListener('click', evt => {
+        switch (evt.target.className) {
+          case 'slider__previous':
+            slider.slidePrevious();
+            break;
+          case 'slider__next':
+            slider.slideNext();
+            break;
+        }
+      })
+    }
+
+    function controllerPlugin(slider) {
+      slider.controllerItems = [...document.querySelectorAll('.slider__controller-button, .slider__controller-button--selected')];
+      slider.getSelectedControllerIndex = () => {
+        return slider.controllerItems.indexOf(slider.getSelectedController());
+      }
+      slider.getSelectedController = () => {
+        const selected = slider.container.querySelector('.slider__controller-button--selected');
+        return selected;
+      }
+      slider.container.addEventListener('mouseover', evt => {
+        if (evt.target.className === 'slider__controller-button') {
+          slider.getSelectedController().className = 'slider__controller-button';
+          evt.target.className = 'slider__controller-button--selected';
+          slider.slideTo(slider.getSelectedControllerIndex());
+          slider.endSlide();
+        }
+      })
+      slider.container.addEventListener('mouseout', evt => {
+        const currentClassName = evt.target.className;
+        if (currentClassName === 'slider__controller-button' || currentClassName === 'slider__controller-button--selected') {
+          slider.startSlide();
+        }
+      })
+      slider.container.addEventListener('slide', evt => {
+        slider.getSelectedController().className = 'slider__controller-button';
+        slider.controllerItems[evt.detail.index].className = 'slider__controller-button--selected';
+      })
+    }
+    
+    const container = document.querySelector('.slider-container');
+    const slider = new Slider({container});
+    slider.registerPlugins(prevNextPlugin, controllerPlugin);
+    slider.startSlide();
+  </script>
+</body>
+</html>

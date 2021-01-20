@@ -1,39 +1,39 @@
-let MacroCommand = function() {
+const MacroCommand = function () {
   return {
     commandList: [],
-    add: function(command) {
-      this.commandList.push(command)
+    add(command) {
+      this.commandList.push(command);
     },
-    excute: function() {
-      this.commandList.map(command => {
-        command.excute()
-      })
-    }
-  }
-}
+    excute() {
+      this.commandList.map((command) => {
+        command.excute();
+      });
+    },
+  };
+};
 
-let openAcCommand = {
+const openAcCommand = {
   excute: () => {
-    console.log('Open the air conditioning!')
-  }
-}
+    console.log('Open the air conditioning!');
+  },
+};
 
-let openTvCommand = {
+const openTvCommand = {
   excute: () => {
-    console.log('Open the TV!')
-  }
-}
+    console.log('Open the TV!');
+  },
+};
 
-let macroCommand = MacroCommand()
-macroCommand.add(openAcCommand)
-macroCommand.add(openTvCommand)
-macroCommand.excute()
+const macroCommand = MacroCommand();
+macroCommand.add(openAcCommand);
+macroCommand.add(openTvCommand);
+macroCommand.excute();
 
 function Upload() {
-  let arr = Array.from({length: 10}, (item, index) => index + 1)
+  const arr = Array.from({ length: 10 }, (item, index) => index + 1);
   for (let i = 0, item; item = arr[i++];) {
-    console.log(i)
+    console.log(i);
   }
 }
 
-Upload()
+Upload();
