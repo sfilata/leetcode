@@ -1,7 +1,10 @@
 function twoSum(nums: number[], target: number): number[] {
+  let dict: { [key: string]: number } = {};
   for (let i = 0; i < nums.length; i++) {
-    if (nums.lastIndexOf(target - nums[i]) > i) {
-      return [i, nums.lastIndexOf(target - nums[i])];
+    if (!dict.hasOwnProperty(nums[i])) {
+      dict[target - nums[i]] = i;
+    } else {
+      return [dict[nums[i]], i];
     }
   }
   return [];
