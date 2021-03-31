@@ -19,4 +19,5 @@ var subsetsWithDup = function (nums) {
 
 console.log(subsetsWithDup([1, 1, 2, 2, 3]));
 
-module.exports = subsetsWithDup;
+// module.exports = subsetsWithDup;
+export default subsetsWithDup;

@@ -30,17 +30,4 @@ function searchRowIndex(arr, target) {
   else return searchRowIndex(arr.slice(index, arr.length), target) + index;
 }
 
-console.log(
-  searchMatrix(
-    [
-      [1, 3, 5, 7],
-      [10, 11, 16, 20],
-      [23, 30, 34, 60],
-    ],
-    22
-  )
-);
-
-// console.log(searchRowIndex([1, 10, 23], 11));
-
-module.exports = searchMatrix;
+export default searchMatrix;

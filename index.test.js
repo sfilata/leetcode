@@ -1,4 +1,5 @@
-const searchMatrix = require("./searchMatrix");
+// const searchMatrix = require("./searchMatrix");
+import searchMatrix from "./searchMatrix";
 
 test("searchMatrix Test", () => {
   expect(
