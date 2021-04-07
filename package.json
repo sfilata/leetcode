@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "ts": "node --loader ts-node/esm ./merge.ts",
     "lint": "eslint ./minPath.js",
     "lint:fix": "eslint ./**/*.js --fix"
   },
